@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #chat-container {
+            width: 800px;
+            max-width: 95%;
+            background: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            background: #4caf50;
+            color: white;
+            margin: 0;
+            padding: 16px;
+            text-align: center;
+        }
+
+        #chat-log {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-log div {
+            margin: 8px 0;
+            padding: 10px 16px;
+            border-radius: 20px;
+            max-width: 70%;
+            word-wrap: break-word;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #chat-log div.user {
+            background-color: #cce5ff;
+            align-self: flex-end;
+            text-align: right;
+            color: #004085;
+            flex-direction: row-reverse;
+        }
+
+        #chat-log div.other {
+            background-color: #d4edda;
+            align-self: flex-start;
+            text-align: left;
+            color: #155724;
+        }
+
+        #chat-log img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        #chat-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding: 8px;
+            background: #f9f9f9;
+            align-items: center;
+        }
+
+        #chat-message-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        #chat-message-send {
+            margin-left: 8px;
+            width: 50px;
+            height: 50px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #chat-message-send:hover {
+            background: #45a049;
+        }
+
+        #chat-message-send i {
+            font-size: 20px;
+        }
+        .user{
+            align-self: flex-end;
+            text-align: right;
+            color: #004085;
+        }
+        .other{
+            align-self: flex-start;
+            text-align: left;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h1>Chat between {{ chat.user1.username }} and {{ chat.user2.username }}</h1>
+        <div id="chat-log">
+            {% for message in messages %}
+                
+                <div class="{% if message.sender == chat.user1.username %}user{% else %}other{% endif %}">
+                {{ message.sender }}:{{ chat.user1.username }}
+{#                    <img src="{% if user == chat.user1.username %}{{ chat.user1.profile_image_url }}{% else %}{{ chat.user2.profile_image_url }}{% endif %}" alt="Profile">#}
+                    <span>{{ message.sender }}: {{ message.content }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="chat-input">
+            <input id="chat-message-input" type="text" placeholder="Type your message here..." required>
+            <button id="chat-message-send">
+                <i>&#10148;</i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/{{ chat.id }}/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messageClass = data.sender === '{{ chat.user1.username }}' ? 'user' : 'other';
+            const messageDiv = document.createElement('div');
+            messageDiv.className = messageClass;
+
+            const profileImg = document.createElement('img');
+            profileImg.src = data.sender === '{{ chat.user1.username }}' ? '{{ chat.user1.profile_image_url }}' : '{{ chat.user2.profile_image_url }}';
+            profileImg.alt = "Profile";
+
+            const messageContent = document.createElement('span');
+            messageContent.textContent = data.sender + ': ' + data.message;
+
+            messageDiv.appendChild(profileImg);
+            messageDiv.appendChild(messageContent);
+
+            document.querySelector('#chat-log').appendChild(messageDiv);
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-send').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+    </script>
+</body>
+</html>

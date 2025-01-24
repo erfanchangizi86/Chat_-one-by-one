@@ -33,11 +33,11 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'channels',
-    'material',  # کتابخانه اصلی
-    'material.admin',
-    # 'grappelli',
-    # 'jazzmin',
-    # 'django.contrib.admin',
+    # 'material',  # کتابخانه اصلی
+    # 'material.admin',
+    # # 'grappelli',
+    'jazzmin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -52,88 +52,88 @@ INSTALLED_APPS = [
 
 
 
-# JAZZMIN_SETTINGS = {
-#     # سایر تنظیمات قبلی شما
-#     "show_language_picker": True,  # نمایش انتخاب زبان
-#     "translations": True,  # فعال کردن ترجمه
-#     "language_chooser": True,  # نمایش لیست زبان‌ها
-#     # سایت و برند
-#     "site_title": "Library Admin",
-#     "site_header": "Library Management",
-#     "site_brand": "Library Admin",
-#     "site_logo": "books/img/logo.png",  # مسیر لوگوی دلخواه
-#     "site_logo_classes": "img-circle",
-#     "site_icon": "books/img/favicon.ico",  # آیکون مرورگر
-#     "welcome_sign": "Welcome to the Library Admin Panel",
-#     "copyright": "© 2025 Library Inc",  # فعال‌سازی انتخاب زبان
-#     "theme": "green",
-#     # منوی بالا
-#     "topmenu_links": [
-#         {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
-#         {"name": "Docs", "url": "https://docs.djangoproject.com/", "new_window": True},
-#         {"model": "auth.User"},
-#         {"app": "books"},
-#     ],
-#
-#     # منوی کاربر
-#     "usermenu_links": [
-#         {"name": "Profile", "url": "/profile", "icon": "fas fa-user-circle"},
-#         {"name": "Support", "url": "https://support.example.com", "new_window": True, "icon": "fas fa-life-ring"},
-#     ],
-#
-#     # منوی جانبی
-#     "show_sidebar": True,
-#     "navigation_expanded": True,
-#     "hide_apps": [],
-#     "hide_models": [],
-#     "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
-#     "custom_links": {
-#         "books": [
-#             {
-#                 "name": "Generate Report",
-#                 "url": "generate_report",
-#                 "icon": "fas fa-chart-line",
-#                 "permissions": ["books.view_book"]
-#             },
-#             {
-#                 "name": "Send Notifications",
-#                 "url": "send_notifications",
-#                 "icon": "fas fa-envelope",
-#                 "permissions": ["books.view_book"]
-#             }
-#         ]
-#     },
-#
-#     # آیکون‌های اپلیکیشن‌ها و مدل‌ها
-#     "icons": {
-#         "auth": "fas fa-users-cog",
-#         "auth.user": "fas fa-user",
-#         "auth.group": "fas fa-users",
-#         "books": "fas fa-book",
-#         "books.author": "fas fa-feather-alt",
-#         "books.book": "fas fa-book-open",
-#     },
-#     "default_icon_parents": "fas fa-folder",
-#     "default_icon_children": "fas fa-file",
-#
-#     # مدل مرتبط
-#     "related_modal_active": True,
-#
-#     # تغییرات UI
-#     "custom_css": "css/custom_admin.css",  # مسیر فایل CSS دلخواه
-#     "custom_js": "js/custom_admin.js",  # مسیر فایل JS دلخواه
-#     "use_google_fonts_cdn": True,
-#     "show_ui_builder": False,
-#
-#     # تغییر نمایش فرم‌ها
-#     "changeform_format": "horizontal_tabs",
-#     "changeform_format_overrides": {
-#         "auth.user": "vertical_tabs",
-#         "auth.group": "collapsible"
-#     },
-#
-#
-# }
+JAZZMIN_SETTINGS = {
+    # سایر تنظیمات قبلی شما
+    "show_language_picker": True,  # نمایش انتخاب زبان
+    "translations": True,  # فعال کردن ترجمه
+    "language_chooser": True,  # نمایش لیست زبان‌ها
+    # سایت و برند
+    "site_title": "Library Admin",
+    "site_header": "Library Management",
+    "site_brand": "Library Admin",
+    "site_logo": "books/img/logo.png",  # مسیر لوگوی دلخواه
+    "site_logo_classes": "img-circle",
+    "site_icon": "books/img/favicon.ico",  # آیکون مرورگر
+    "welcome_sign": "Welcome to the Library Admin Panel",
+    "copyright": "© 2025 Library Inc",  # فعال‌سازی انتخاب زبان
+    "theme": "green",
+    # منوی بالا
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Docs", "url": "https://docs.djangoproject.com/", "new_window": True},
+        {"model": "auth.User"},
+        {"app": "books"},
+    ],
+
+    # منوی کاربر
+    "usermenu_links": [
+        {"name": "Profile", "url": "/profile", "icon": "fas fa-user-circle"},
+        {"name": "Support", "url": "https://support.example.com", "new_window": True, "icon": "fas fa-life-ring"},
+    ],
+
+    # منوی جانبی
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": ["auth", "books", "books.author", "books.book"],
+    "custom_links": {
+        "books": [
+            {
+                "name": "Generate Report",
+                "url": "generate_report",
+                "icon": "fas fa-chart-line",
+                "permissions": ["books.view_book"]
+            },
+            {
+                "name": "Send Notifications",
+                "url": "send_notifications",
+                "icon": "fas fa-envelope",
+                "permissions": ["books.view_book"]
+            }
+        ]
+    },
+
+    # آیکون‌های اپلیکیشن‌ها و مدل‌ها
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.group": "fas fa-users",
+        "books": "fas fa-book",
+        "books.author": "fas fa-feather-alt",
+        "books.book": "fas fa-book-open",
+    },
+    "default_icon_parents": "fas fa-folder",
+    "default_icon_children": "fas fa-file",
+
+    # مدل مرتبط
+    "related_modal_active": True,
+
+    # تغییرات UI
+    "custom_css": "css/custom_admin.css",  # مسیر فایل CSS دلخواه
+    "custom_js": "js/custom_admin.js",  # مسیر فایل JS دلخواه
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+
+    # تغییر نمایش فرم‌ها
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "auth.user": "vertical_tabs",
+        "auth.group": "collapsible"
+    },
+
+
+}
 
 
 
@@ -168,7 +168,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'dj.wsgi.application'
+# WSGI_APPLICATION = 'dj.wsgi.application'
+ASGI_APPLICATION = 'dj.asgi.application'
 
 
 # Database
@@ -204,7 +205,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'fa'  # زبان پیش‌فرض فارسی
+LANGUAGE_CODE = 'en'  # زبان پیش‌فرض فارسی
 TIME_ZONE = 'Asia/Tehran'  # تنظیم منطقه زمانی ایران
 
 USE_I18N = True
@@ -245,3 +246,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     'TRAY_REVERSE': False,         # ترتیب معکوس برای منو
 #     'NAVBAR_FIXED': True,          # فیکس کردن نوار بالایی
 # }
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}

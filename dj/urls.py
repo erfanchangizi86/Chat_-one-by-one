@@ -20,13 +20,14 @@ from django.urls import path, include
 
 urlpatterns = [
        path('admin/', admin.site.urls),
+       path('', include('Chat.urls')),
 ]
 
-# urlpatterns += i18n_patterns(
-#     path('admin/', admin.site.urls),
-#     # سایر URLها که می‌خواهید به i18n اضافه شوند
-# )
-# urlpatterns += [
-#     path('set_language/', include('django.conf.urls.i18n')),
-# ]
-#
+urlpatterns += i18n_patterns(
+    path('admin/', admin.site.urls),
+    # سایر URLها که می‌خواهید به i18n اضافه شوند
+)
+urlpatterns += [
+    path('set_language/', include('django.conf.urls.i18n')),
+]
+
