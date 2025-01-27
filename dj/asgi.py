@@ -1,16 +1,17 @@
 import os
-from django.core.asgi import get_asgi_application
-from channels.routing import ProtocolTypeRouter, URLRouter
+import django  # اضافه کردن این خط
 from channels.auth import AuthMiddlewareStack
-from Chat.routing import (websocket_urlpatterns)
+from channels.routing import ProtocolTypeRouter, URLRouter
+from django.core.asgi import get_asgi_application
+import Chat.routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dj.settings')
+# تنظیمات Django را بارگذاری می‌کنیم
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangocha.settings')
+django.setup()  # این خط را اضافه کنید
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
-        URLRouter(
-            websocket_urlpatterns
-        )
+        URLRouter(Chat.routing.websocket_urlpatterns)
     ),
 })

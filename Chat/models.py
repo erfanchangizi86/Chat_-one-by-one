@@ -21,7 +21,7 @@ class PrivetChat(models.Model):
 
 
 class Message(models.Model):
-    chat = models.ForeignKey(PrivetChat, on_delete=models.CASCADE, related_name="messages")
+    chat = models.ForeignKey('Chat.PrivetChat', on_delete=models.CASCADE, related_name="messages")
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -34,3 +34,5 @@ class Message(models.Model):
 
     def chat_message(self):
         return Message.objects.filter(chat=self.chat, sender=self.sender, content=self.content)
+
+

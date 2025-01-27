@@ -63,7 +63,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Library Admin",
     "site_logo": "books/img/logo.png",  # مسیر لوگوی دلخواه
     "site_logo_classes": "img-circle",
-    "site_icon": "books/img/favicon.ico",  # آیکون مرورگر
+    "site_icon": "books/img/logo.png",  # آیکون مرورگر
     "welcome_sign": "Welcome to the Library Admin Panel",
     "copyright": "© 2025 Library Inc",  # فعال‌سازی انتخاب زبان
     "theme": "green",
@@ -224,7 +224,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATIC_ROOT = BASE_DIR / "staticfiles"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
