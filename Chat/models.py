@@ -19,6 +19,15 @@ class PrivetChat(models.Model):
         verbose_name = "چت خصوصی"
         verbose_name_plural = "چت‌های خصوصی"
 
+    def get_last_message_preview(self, length=20):
+        """
+        Returns a preview of the last message in the chat (up to `length` characters).
+        """
+        last_message = self.messages.order_by('-timestamp').first()
+        if last_message:
+            return last_message.content[:length] + ("..." if len(last_message.content) > length else "")
+        return "No messages yet."
+
 
 class Message(models.Model):
     chat = models.ForeignKey('Chat.PrivetChat', on_delete=models.CASCADE, related_name="messages")

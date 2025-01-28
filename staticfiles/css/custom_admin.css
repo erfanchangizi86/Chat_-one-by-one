@@ -1,0 +1,25 @@
+/* اضافه کردن فونت فارسی (Vazir) */
+@import url('https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;500&display=swap');
+
+/* زمانی که زبان به فارسی تغییر می‌کند (راست‌چین) */
+body[dir="rtl"] {
+    direction: rtl;  /* تنظیم راست‌چین کردن متن */
+    text-align: right;  /* تراز کردن متن به راست */
+    font-family: 'Vazir', sans-serif;  /* استفاده از فونت فارسی */
+}
+
+/* راست‌چین کردن منوها */
+body[dir="rtl"] .navbar, body[dir="rtl"] .sidebar {
+    text-align: right;
+}
+
+/* تغییرات استایل برای دکمه‌ها */
+button, .btn {
+    font-family: 'Vazir', sans-serif;
+    font-size: 14px;
+}
+
+/* تنظیمات برای فیلدهای فرم */
+body[dir="rtl"] .form-control {
+    text-align: right;
+}

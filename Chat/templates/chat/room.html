@@ -1,146 +1,73 @@
 <!DOCTYPE html>
-<html>
+{% load static %}
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Private Chat</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        #chat-container {
-            width: 800px;
-            max-width: 95%;
-            background: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        h1 {
-            background: #4caf50;
-            color: white;
-            margin: 0;
-            padding: 16px;
-            text-align: center;
-        }
-
-        #chat-log {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-            background-color: #fafafa;
-            border-top: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #chat-log div {
-            margin: 8px 0;
-            padding: 10px 16px;
-            border-radius: 20px;
-            max-width: 70%;
-            word-wrap: break-word;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #chat-log div.user {
-            background-color: #cce5ff;
-            align-self: flex-end;
-            text-align: right;
-            color: #004085;
-            flex-direction: row-reverse;
-        }
-
-        #chat-log div.other {
-            background-color: #d4edda;
-            align-self: flex-start;
-            text-align: left;
-            color: #155724;
-        }
-
-        #chat-log img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        #chat-input {
-            display: flex;
-            border-top: 1px solid #ddd;
-            padding: 8px;
-            background: #f9f9f9;
-            align-items: center;
-        }
-
-        #chat-message-input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
-        #chat-message-send {
-            margin-left: 8px;
-            width: 50px;
-            height: 50px;
-            background: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #chat-message-send:hover {
-            background: #45a049;
-        }
-
-        #chat-message-send i {
-            font-size: 20px;
-        }
-        .user{
-            align-self: flex-end;
-            text-align: right;
-            color: #004085;
-        }
-        .other{
-            align-self: flex-start;
-            text-align: left;
-            color: #155724;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div id="chat-container">
-        <h1>Chat between {{ chat.user1.username }} and {{ chat.user2.username }}</h1>
-        <div id="chat-log">
-            {% for message in messages %}
-                
-                <div class="{% if message.sender == chat.user1.username %}user{% else %}other{% endif %}">
-                {{ message.sender }}:{{ chat.user1.username }}
-{#                    <img src="{% if user == chat.user1.username %}{{ chat.user1.profile_image_url }}{% else %}{{ chat.user2.profile_image_url }}{% endif %}" alt="Profile">#}
-                    <span>{{ message.sender }}: {{ message.content }}</span>
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+    <div id="chat-container" class="w-full max-w-3xl bg-white shadow-lg rounded-lg flex flex-col overflow-hidden">
+        <!-- Header -->
+        <h1 class="bg-green-500 text-white text-center py-4 text-xl font-bold">
+            Chat between {{ chat.user1.username }} and {{ chat.user2.username }}
+        </h1>
+
+        <!-- Chat Log -->
+        <div id="chat-log" class="flex-1 p-4 overflow-y-auto bg-gray-50 border-y border-gray-300 flex flex-col space-y-4">
+                {% for message in messages %}
+                    {% if chat.user1.username == message.sender.username %}
+                <div class="flex justify-end">
+                    <div class="flex items-center space-x-3 max-w-[70%] flex-row-reverse text-right">
+                <img src="{% static 'books/img/logo.png' %}" alt="{{ message.sender }}" class="w-10 h-10 rounded-full">
+                <div>
+                      
+                    <span class=" relative px-5 pb-2 pt-4  rounded-2xl text-base bg-blue-100 text-blue-800">
+                        {% if request.user.username == message.sender.username %}
+                            
+                        {% else %}
+                            <small class=" text-gray-500 text-xs block absolute top-1 left-1 px-1">{{ message.sender.username }}</small>
+                            {{ message.content }}
+                        {% endif %}
+                    </span>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-        <div id="chat-input">
-            <input id="chat-message-input" type="text" placeholder="Type your message here..." required>
-            <button id="chat-message-send">
+        {% endif %}
+
+
+                     {% if chat.user2.username == message.sender.username %}
+                    	 <div class="flex justify-start">
+                             <div class="flex items-center space-x-3 max-w-[70%]">
+                        <img src="{% static 'books/img/logo.png' %}" alt="{{ message.sender }}" class="w-10 h-10 rounded-full">
+                        <span class="px-4 py-2 rounded-3xl text-sm 
+                        bg-green-100 text-green-800">
+                              {% if request.user.username == message.sender.username %}
+                                    {{ message.content }}
+                                    {% else %}
+                            {{ message.sender.username }}: {{ message.content }}
+                                {% endif %} 
+                        </span>
+                 </div>
+                </div>
+                    {% endif %} 
+{#        <div class="flex justify-end {% if message.sender.username == chat.user1.username %} justify-end {% else %} justify-start{% endif %}">#}
+{#            <div class="flex items-center space-x-3 max-w-[70%]">#}
+{#                <img src="{% static 'books/img/logo.png' %}" alt="Profile" class="w-10 h-10 rounded-full">#}
+{#                <span class="px-4 py-2 rounded-3xl text-sm {% if message.sender == request.user1.username %}#}
+{#                bg-blue-100 text-blue-800{% else %}bg-green-100 text-green-800{% endif %}">#}
+{#                    {{ message.sender.username }}: {{ message.content }}#}
+{#                </span>#}
+{#            </div>#}
+{#        </div>#}
+        {% endfor %}
+        </div>
+
+        <!-- Chat Input -->
+        <div id="chat-input" class="flex items-center border-t border-gray-300 bg-gray-100 px-4 py-2">
+            <input id="chat-message-input" type="text" placeholder="Type your message here..." class="flex-1 px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+            <button id="chat-message-send" class="ml-4 w-12 h-12 bg-green-500 text-white rounded-full flex justify-center items-center hover:bg-green-600">
                 <i>&#10148;</i>
             </button>
         </div>
@@ -153,19 +80,27 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            const messageClass = data.sender === '{{ chat.user1.username }}' ? 'user' : 'other';
+            const messageClass = data.sender === '{{ chat.user1.username }}' ? 'justify-end' : 'justify-start';
             const messageDiv = document.createElement('div');
-            messageDiv.className = messageClass;
+            messageDiv.className = `flex ${messageClass}`;
+
+            const innerDiv = document.createElement('div');
+            innerDiv.className = 'flex items-center space-x-3 max-w-[70%]';
 
             const profileImg = document.createElement('img');
             profileImg.src = data.sender === '{{ chat.user1.username }}' ? '{{ chat.user1.profile_image_url }}' : '{{ chat.user2.profile_image_url }}';
             profileImg.alt = "Profile";
+            profileImg.className = "w-10 h-10 rounded-full";
 
             const messageContent = document.createElement('span');
+            messageContent.className = `px-4 py-2 rounded-3xl text-sm ${
+                data.sender === '{{ chat.user1.username }}' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+            }`;
             messageContent.textContent = data.sender + ': ' + data.message;
 
-            messageDiv.appendChild(profileImg);
-            messageDiv.appendChild(messageContent);
+            innerDiv.appendChild(profileImg);
+            innerDiv.appendChild(messageContent);
+            messageDiv.appendChild(innerDiv);
 
             document.querySelector('#chat-log').appendChild(messageDiv);
         };
