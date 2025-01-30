@@ -13,11 +13,11 @@
 <header class="bg-indigo-700 text-white py-6">
     <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4 px-4">
         <!-- Logo -->
-        <h1 class="text-3xl font-bold">McqMate</h1>
+        <h1 class="text-3xl font-bold"><a href="{% url 'chat_user_list' %}">McqMate</a></h1>
 
         <!-- Search Bar -->
         <div class="relative w-full md:w-1/2">
-            <form action="">
+            <form action="{% url 'chat_user_list' %}">
             <input 
                 type="text" 
                 placeholder="Search topics, courses, or users..." 

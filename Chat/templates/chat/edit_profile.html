@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+</head>
+<body>
+<div class="max-w-2xl w-1/2 mx-auto bg-white shadow-2xl rounded-2xl p-8 mt-16">
+    <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">ویرایش اطلاعات کاربری</h2>
+
+    <!-- نمایش ارورها -->
+    {% if form.errors %}
+      <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg border border-red-400">
+        <strong>خطا!</strong> لطفاً فیلدهای مشخص‌شده را بررسی کنید.
+      </div>
+    {% endif %}
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- فیلد نام -->
+      <div>
+        <label for="{{ form.first_name.id_for_label }}" class="block text-gray-700 font-medium mb-1">نام:</label>
+        {{ form.first_name }}
+        {% if form.first_name.errors %}
+          <p class="text-red-600 text-sm mt-1">{{ form.first_name.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- فیلد نام خانوادگی -->
+      <div>
+        <label for="{{ form.last_name.id_for_label }}" class="block text-gray-700 font-medium mb-1">نام خانوادگی:</label>
+        {{ form.last_name }}
+        {% if form.last_name.errors %}
+          <p class="text-red-600 text-sm mt-1">{{ form.last_name.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- فیلد ایمیل -->
+      <div>
+        <label for="{{ form.username.id_for_label }}" class="block text-gray-700 font-medium mb-1">نام کاربری:</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- دکمه ارسال -->
+      <button type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-md">
+        ذخیره تغییرات
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>
+

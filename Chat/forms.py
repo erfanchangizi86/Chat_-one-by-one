@@ -1,6 +1,6 @@
 from django import forms
 
-
+from Chat.models import profile
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -144,3 +144,47 @@ class Test_form(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+
+class edit_profile_form(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name']
+        widgets = {
+            'username':forms.TextInput(attrs={'class':'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200'}),
+            'first_name': forms.TextInput(attrs={'class':'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200'}),
+            'last_name': forms.TextInput(attrs={'class':'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200'})
+        }
+        labels = {
+            'username':'نام کاربری',
+            "first_name":"نام",
+            'last_name':"نام خانوادگی"
+        }
+        error_messages = {
+            "username": {
+                "required": "وارد کردن نام کاربری الزامی است.",
+                "max_length": "نام کاربری نمی‌تواند بیشتر از 150 کاراکتر باشد.",
+                "unique": "این نام کاربری قبلاً ثبت شده است. لطفاً یک نام کاربری دیگر انتخاب کنید.",
+            },
+            "first_name": {
+                "required": "وارد کردن نام کاربری الزامی است.",
+                "max_length": "نام کاربری نمی‌تواند بیشتر از 150 کاراکتر باشد.",
+                "unique": "این نام کاربری قبلاً ثبت شده است. لطفاً یک نام کاربری دیگر انتخاب کنید.",
+            },
+            "last_name": {
+                "required": "وارد کردن نام کاربری الزامی است.",
+                "max_length": "نام کاربری نمی‌تواند بیشتر از 150 کاراکتر باشد.",
+                "unique": "این نام کاربری قبلاً ثبت شده است. لطفاً یک نام کاربری دیگر انتخاب کنید.",
+            },
+
+
+        }
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = profile
+        fields = ['avatar']
+        widgets = {
+            'avatar':forms.FileInput(attrs={'class': 'w-full p-2 border rounded-lg'})
+        }

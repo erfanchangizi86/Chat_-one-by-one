@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<!-- Header -->
+<header class="bg-indigo-700 text-white py-6">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4 px-4">
+        <!-- Logo -->
+        <h1 class="text-3xl font-bold"><a href="{% url 'chat_user_list' %}">McqMate</a></h1>
+
+        <!-- Search Bar -->
+        <div class="relative w-full md:w-1/2">
+            <form action="{% url 'chat_user_list' %}">
+            <input 
+                type="text" 
+                placeholder="Search topics, courses, or users..." 
+                name="search"
+                class="w-full rounded-lg py-2 px-4 text-gray-800 outline-none focus:ring-2 focus:ring-indigo-400 ">
+            <button class="absolute right-3 top-2" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+            </button>
+                </form>
+        </div>
+
+        <!-- Login/Register Links -->
+        <div class="flex gap-4">
+            <a href="{% url 'login' %}" class="text-white text-lg hover:underline">ورود</a>
+            <a href="{% url 'register' %}" class="text-white text-lg hover:underline">ثبت نام </a>
+             <a href="{% url 'logout' %}" class="text-white text-lg hover:underline">خروج</a>
+        </div>
+    </div>
+</header>
+
+<main class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white overflow-hidden shadow rounded-lg border w-1/2">
+        <div class="flex justify-center pt-6">
+            <img class="rounded-lg w-40 h-40 border-4 border-4 border-double border-blue-800 shadow-md" src="{{ user.profile.avatar.url }}" alt="Extra large avatar">
+{#            <img src="{{ user.profile.avatar.url }}" alt="User Avatar" class="w-32 h-32 rounded-full border-4 border-blue-500 shadow-md">#}
+        </div>
+        <div class="px-4 py-5 sm:px-6 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                User Profile
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                This is some information about the user.
+            </p>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl class="sm:divide-y sm:divide-gray-200">
+                {% if user.last_name or user.first_name %}
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Full name</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ user.first_name }} {{ user.last_name }}</dd>
+                </div>
+                {% endif %}
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Email address</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ user.email }}</dd>
+                </div>
+                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Username</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ user.username }}</dd>
+                </div>
+            </dl>
+        </div>
+        <!-- دکمه وسط چین شده و بزرگ‌تر شده -->
+        <div class="flex justify-center pb-6">
+                <a href="{% url 'user_edit'  %}" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-6 py-3 text-center">Edit Profile</a>
+        </div>
+    </div>
+</main>
+
+
+
+</body>
+</html>

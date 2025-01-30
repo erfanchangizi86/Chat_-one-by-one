@@ -1,14 +1,16 @@
-from django.contrib.auth import logout
+from django.contrib.auth import logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView,UpdateView
 
-from Chat.forms import RegisterForm, Test_form
+from Chat.forms import RegisterForm, Test_form,edit_profile_form
 from Chat.models import PrivetChat, Message, profile
 
+User = get_user_model()
 
 @login_required(login_url='/login/')
 def chat_index(request):
@@ -54,3 +56,32 @@ class formclass(FormView):
 def logout_view(request):
     logout(request)
     return redirect(reverse('login'))
+
+
+class profileListView(ListView):
+    model = User
+    template_name = 'chat/profile.html'
+    context_object_name = 'user'
+    def get_queryset(self):
+        query =  super().get_queryset()
+        query = query.get(id=self.request.user.id)
+        return query
+
+
+class profileEdit(LoginRequiredMixin,UpdateView):
+    model = User
+    form_class = edit_profile_form
+    template_name = 'chat/edit_profile.html'
+    success_url = reverse_lazy('user')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+class profileEditeImage(LoginRequiredMixin,UpdateView):
+    model = profile
+    form_class = edit_profile_form
+    success_url = reverse_lazy('user')
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
