@@ -9,100 +9,97 @@
 </head>
 <body class="bg-gray-100 flex justify-center items-center h-screen">
     <div id="chat-container" class="w-full max-w-3xl bg-white shadow-lg rounded-lg flex flex-col overflow-hidden">
+
         <!-- Header -->
         <h1 class="bg-green-500 text-white text-center py-4 text-xl font-bold">
             Chat between {{ chat.user1.username }} and {{ chat.user2.username }}
         </h1>
 
+        <!-- Search Bar -->
+        <div class="p-4 bg-gray-200">
+            <input id="chat-search" type="text" placeholder="Search messages..."
+                class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+
         <!-- Chat Log -->
-        <div id="chat-log" class="flex-1 p-4 overflow-y-auto bg-gray-50 border-y border-gray-300 flex flex-col space-y-4">
-                {% for message in messages %}
-                    {% if chat.user1.username == message.sender.username %}
-                <div class="flex justify-end">
-                    <div class="flex items-center space-x-3 max-w-[70%] flex-row-reverse text-right">
-                <img src="{% static 'books/img/logo.png' %}" alt="{{ message.sender }}" class="w-10 h-10 rounded-full">
-                <div>
-                      
-                    <span class=" relative px-5 pb-2 pt-4  rounded-2xl text-base bg-blue-100 text-blue-800">
-                        {% if request.user.username == message.sender.username %}
-                            
-                        {% else %}
-                            <small class=" text-gray-500 text-xs block absolute top-1 left-1 px-1">{{ message.sender.username }}</small>
+        <div id="chat-log" class="p-4 h-[600px] overflow-y-auto bg-gray-50 border-y border-gray-300 flex flex-col space-y-4">
+        {% for message in messages %}
+            <div class="flex {% if message.sender == request.user %}justify-end{% else %}justify-start{% endif %}">
+                <div class="flex items-center space-x-3 max-w-[70%] {% if message.sender == request.user %}flex-row-reverse text-right{% endif %}">
+                    <img src="{{ message.sender.profile.avatar.url }}" alt="" class="w-10 h-10 rounded-full">
+                    <div class="relative px-5 py-3 rounded-3xl text-sm
+                     {% if message.sender == request.user %}bg-blue-100 text-blue-800{% else %}bg-green-100 text-green-800{% endif %}">
+                            {% if message.sender != request.user %}
+                                <small class="text-gray-500 text-xs absolute top-1 left-1 px-1">{{ message.sender.username }}</small>
+                            {% endif %}
                             {{ message.content }}
-                        {% endif %}
-                    </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
-        {% endif %}
 
-
-                     {% if chat.user2.username == message.sender.username %}
-                    	 <div class="flex justify-start">
-                             <div class="flex items-center space-x-3 max-w-[70%]">
-                        <img src="{% static 'books/img/logo.png' %}" alt="{{ message.sender }}" class="w-10 h-10 rounded-full">
-                        <span class="px-4 py-2 rounded-3xl text-sm 
-                        bg-green-100 text-green-800">
-                              {% if request.user.username == message.sender.username %}
-                                    {{ message.content }}
-                                    {% else %}
-                            {{ message.sender.username }}: {{ message.content }}
-                                {% endif %} 
-                        </span>
-                 </div>
-                </div>
-                    {% endif %} 
-{#        <div class="flex justify-end {% if message.sender.username == chat.user1.username %} justify-end {% else %} justify-start{% endif %}">#}
-{#            <div class="flex items-center space-x-3 max-w-[70%]">#}
-{#                <img src="{% static 'books/img/logo.png' %}" alt="Profile" class="w-10 h-10 rounded-full">#}
-{#                <span class="px-4 py-2 rounded-3xl text-sm {% if message.sender == request.user1.username %}#}
-{#                bg-blue-100 text-blue-800{% else %}bg-green-100 text-green-800{% endif %}">#}
-{#                    {{ message.sender.username }}: {{ message.content }}#}
-{#                </span>#}
-{#            </div>#}
-{#        </div>#}
-        {% endfor %}
-        </div>
 
         <!-- Chat Input -->
         <div id="chat-input" class="flex items-center border-t border-gray-300 bg-gray-100 px-4 py-2">
-            <input id="chat-message-input" type="text" placeholder="Type your message here..." class="flex-1 px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+            <input id="chat-message-input" type="text" placeholder="Type your message here..."
+                class="flex-1 px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
             <button id="chat-message-send" class="ml-4 w-12 h-12 bg-green-500 text-white rounded-full flex justify-center items-center hover:bg-green-600">
                 <i>&#10148;</i>
             </button>
         </div>
     </div>
-
+    {{ chat_id|json_script:"chat_id" }}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const chat_id = JSON.parse(document.getElementById('chat_id').textContent);
         const chatSocket = new WebSocket(
             'ws://' + window.location.host + '/ws/chat/{{ chat.id }}/'
         );
+        const chatLog = document.querySelector('#chat-log');
 
         chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            const messageClass = data.sender === '{{ chat.user1.username }}' ? 'justify-end' : 'justify-start';
+             let data = JSON.parse(e.data);
+            if (data.type === 'notification') {
+                showNotification(data);
+            } else{
+
+            const isSender = data.sender === "{{ request.user.username }}";
             const messageDiv = document.createElement('div');
-            messageDiv.className = `flex ${messageClass}`;
+            messageDiv.className = `flex ${isSender ? 'justify-end' : 'justify-start'}`;
 
             const innerDiv = document.createElement('div');
-            innerDiv.className = 'flex items-center space-x-3 max-w-[70%]';
-
+            innerDiv.className = `flex items-center space-x-3 max-w-[70%] ${isSender ? 'flex-row-reverse text-right' : ''}`;
+            console.log(data.profile)
             const profileImg = document.createElement('img');
-            profileImg.src = data.sender === '{{ chat.user1.username }}' ? '{{ chat.user1.profile_image_url }}' : '{{ chat.user2.profile_image_url }}';
+            if (data.profile) {
+                profileImg.src = data.profile;
+
+            }
             profileImg.alt = "Profile";
             profileImg.className = "w-10 h-10 rounded-full";
 
-            const messageContent = document.createElement('span');
-            messageContent.className = `px-4 py-2 rounded-3xl text-sm ${
-                data.sender === '{{ chat.user1.username }}' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+
+            const messageContent = document.createElement('div');
+            messageContent.className = `relative px-5 py-3 rounded-3xl text-sm ${
+                isSender ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
             }`;
-            messageContent.textContent = data.sender + ': ' + data.message;
+            messageContent.textContent = data.message;
+
+            if (!isSender) {
+                const senderLabel = document.createElement('small');
+                senderLabel.className = "text-gray-500 text-xs absolute top-1 left-1 px-1";
+                senderLabel.textContent = data.sender;
+                messageContent.appendChild(senderLabel);
+            }
 
             innerDiv.appendChild(profileImg);
             innerDiv.appendChild(messageContent);
             messageDiv.appendChild(innerDiv);
-
             document.querySelector('#chat-log').appendChild(messageDiv);
+
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
         };
 
         chatSocket.onclose = function(e) {
@@ -111,12 +108,78 @@
 
         document.querySelector('#chat-message-send').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
+            const message = messageInputDom.value.trim();
+            if (message) {
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'sender': "{{ request.user.username }}"
+                }));
+                messageInputDom.value = '';
+            }
         };
+
+        document.querySelector("#chat-search").addEventListener("input", function() {
+            let searchValue = this.value.toLowerCase();
+            let messages = document.querySelectorAll("#chat-log div div div:last-child");
+
+            messages.forEach(message => {
+                if (message.textContent.toLowerCase().includes(searchValue)) {
+                    message.parentElement.parentElement.style.display = "flex";
+                } else {
+                    message.parentElement.parentElement.style.display = "none";
+                }
+            });
+        });
+
+        function showNotification(message) {
+            // بررسی اینکه آدرس آیکون معتبر است یا نه
+            const urlIcon = message.profile || '/media/avatars/default.jpg';
+
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+                imageUrl : urlIcon,
+                imageWidth: 50,  // عرض تصویر
+                imageHeight: 50, // ارتفاع تصویر
+                imageAlt: 'Avatar',  // توضیح تصویر
+              title: message.sender +  ":" + message.message.slice(0,20)+"..."
+            });
+
+            // بررسی مجوز نوتیفیکیشن
+    {#        if (Notification.permission === "granted") {#}
+    {#            // ارسال نوتیفیکیشن اگر چت جاری نیست#}
+    {#            if (message['chat_id'] !== chat_id) {#}
+    {#                new Notification(message.sender + ": sent a new message", {#}
+    {#                    body: message.message,#}
+    {#                    icon: urlIcon // استفاده از تصویر پروفایل فرستنده#}
+    {#                });#}
+    {#            }#}
+    {#        } else if (Notification.permission !== "denied") {#}
+    {#            // درخواست مجوز نوتیفیکیشن#}
+    {#            Notification.requestPermission().then(permission => {#}
+    {#                if (permission === "granted") {#}
+    {#            // ارسال نوتیفیکیشن اگر چت جاری نیست#}
+    {#            if (message['chat_id'] !== chat_id) {#}
+    {#                new Notification(message.sender + ": sent a new message", {#}
+    {#                    body: message.message,#}
+    {#                    icon: urlIcon // استفاده از تصویر پروفایل فرستنده#}
+    {#                });#}
+    {#            }#}
+    {#        }#}
+    {#    });#}
+
+}
+
+
     </script>
 </body>
 </html>

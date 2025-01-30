@@ -33,3 +33,4 @@ urlpatterns += [
     path('set_language/', include('django.conf.urls.i18n')),
 ]
 
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

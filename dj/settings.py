@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     # 'material.admin',
     # # 'grappelli',
     'jazzmin',
+    'Chat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # apps
-    'Chat'
+    # 'Chat'
 ]
 
 
@@ -258,3 +259,11 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# اگر می‌خواهید اندازه‌ی فایل‌های تصویری را محدود کنید:
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # حداکثر حجم آپلود (۵ مگابایت)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # حداکثر حجم کل داده‌های آپلودی (۱۰ مگابایت)

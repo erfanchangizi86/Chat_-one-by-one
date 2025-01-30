@@ -7,5 +7,5 @@ urlpatterns = [
     path('chat/users/<int:chat_id>/', views.index, name='index'),
     path('chat/users/register', views.formclass.as_view(), name='register'),
     path('chat/users/login',auth_views.LoginView.as_view(template_name='chat/login.html',),name='login'),
-
+    path('chat/users/logout', views.logout_view, name='logout'),
 ]

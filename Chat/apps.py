@@ -8,5 +8,5 @@ class ChatConfig(AppConfig):
     verbose_name = "سیستم چت"
 
     # def ready(self):
-    #     PrivetChat = apps.get_model('Chat', 'PrivetChat')
-    #     Message = apps.get_model('Chat', 'Message')
+    #     from django.contrib.auth import get_user_model
+    #     User = get_user_model()

@@ -1,12 +1,13 @@
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseForbidden
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy, reverse
 from django.views.generic import FormView
 
 from Chat.forms import RegisterForm, Test_form
-from Chat.models import PrivetChat, Message
+from Chat.models import PrivetChat, Message, profile
 
 
 @login_required(login_url='/login/')
@@ -21,13 +22,22 @@ def chat_index(request):
 
 # Create your views here.
 @login_required(login_url='/login/')
-def index(request,chat_id):
+def index(request, chat_id):
     chat = get_object_or_404(PrivetChat, id=chat_id)
+
+    # بررسی اینکه کاربر در این چت خصوصی عضو است
     if request.user not in [chat.user1, chat.user2]:
         return HttpResponseForbidden("You do not have access to this chat.")
-    messages = chat.messages.all().order_by('timestamp')
-    return render(request, 'chat/room.html', {'chat': chat, 'messages': messages,'user': request.user})
 
+    # دریافت تمام پیام‌های این چت
+    messages = chat.messages.all().order_by('timestamp')
+
+    return render(request, 'chat/room.html', {
+        'chat': chat,
+        'messages': messages,
+        'user': request.user,
+        'chat_id': chat_id,
+    })
 
 class formclass(FormView):
     form_class = Test_form
@@ -37,3 +47,10 @@ class formclass(FormView):
         # ذخیره کاربر
         form.save()
         return super().form_valid(form)
+
+ # daphne -p 8005 dj.asgi:application
+
+@login_required(login_url='/login/')
+def logout_view(request):
+    logout(request)
+    return redirect(reverse('login'))

@@ -1,7 +1,8 @@
 from django import forms
 
 
-from Chat.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class RegisterForm(forms.ModelForm):
     confirm_password = forms.CharField(

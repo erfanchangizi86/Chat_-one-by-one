@@ -33,8 +33,9 @@
 
         <!-- Login/Register Links -->
         <div class="flex gap-4">
-            <a href="{% url 'login' %}" class="text-white text-lg hover:underline">Login</a>
-            <a href="{% url 'register' %}" class="text-white text-lg hover:underline">Register</a>
+            <a href="{% url 'login' %}" class="text-white text-lg hover:underline">ورود</a>
+            <a href="{% url 'register' %}" class="text-white text-lg hover:underline">ثبت نام </a>
+             <a href="{% url 'logout' %}" class="text-white text-lg hover:underline">خروج</a>
         </div>
     </div>
 </header>
@@ -45,7 +46,12 @@
     <div class="space-y-4">
         {% for chat in chats %}
             <div class="flex items-center gap-4 p-4 bg-white shadow-md rounded-lg">
-                <img src="{% static 'books/img/logo.png' %}" alt="Avatar" class="w-12 h-12 rounded-full">
+                {% if chat.user1.username == request.user.username %}
+                     <img src="{{ chat.user2.profile.avatar.url }}" alt="Avatar" class="w-12 h-12 rounded-full">
+                {% else %}
+                 <img src="{{chat.user1.profile.avatar.url}}" alt="Avatar" class="w-12 h-12 rounded-full">
+                {% endif %}
+
                 <div>
                     <a href="{% url 'index' chat_id=chat.id %}" class="hover:underline">
                         <p class="text-gray-800 font-semibold">

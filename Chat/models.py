@@ -1,11 +1,11 @@
 import os
 import django
-
+from django.contrib.auth import get_user_model
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dj.settings")
 django.setup()
-
-from django.contrib.auth import get_user_model
 from django.db import models
+
+
 
 User = get_user_model()
 # Create your models here.
@@ -31,7 +31,7 @@ class PrivetChat(models.Model):
 
 class Message(models.Model):
     chat = models.ForeignKey('Chat.PrivetChat', on_delete=models.CASCADE, related_name="messages")
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE,related_name="sender")
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -45,3 +45,10 @@ class Message(models.Model):
         return Message.objects.filter(chat=self.chat, sender=self.sender, content=self.content)
 
 
+
+class profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.jpg')
+
+    def __str__(self):
+        return self.user.username
