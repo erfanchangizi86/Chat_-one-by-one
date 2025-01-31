@@ -8,53 +8,94 @@
     
 </head>
 <body>
-<div class="max-w-2xl w-1/2 mx-auto bg-white shadow-2xl rounded-2xl p-8 mt-16">
-    <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">ویرایش اطلاعات کاربری</h2>
+<header class="bg-indigo-700 text-white py-6">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4 px-4">
+        <!-- Logo -->
+        <h1 class="text-3xl font-bold"><a href="{% url 'chat_user_list' %}">McqMate</a></h1>
 
-    <!-- نمایش ارورها -->
-    {% if form.errors %}
-      <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg border border-red-400">
-        <strong>خطا!</strong> لطفاً فیلدهای مشخص‌شده را بررسی کنید.
+        <!-- Search Bar -->
+        <div class="relative w-full md:w-1/2">
+            <form action="{% url 'chat_user_list' %}">
+            <input
+                type="text"
+                placeholder="Search topics, courses, or users..."
+                name="search"
+                class="w-full rounded-lg py-2 px-4 text-gray-800 outline-none focus:ring-2 focus:ring-indigo-400 ">
+            <button class="absolute right-3 top-2" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+            </button>
+                </form>
+        </div>
+
+        <!-- Login/Register Links -->
+        <div class="flex gap-4">
+            <a href="{% url 'login' %}" class="text-white text-lg hover:underline">ورود</a>
+            <a href="{% url 'register' %}" class="text-white text-lg hover:underline">ثبت نام </a>
+             <a href="{% url 'logout' %}" class="text-white text-lg hover:underline">خروج</a>
+        </div>
+    </div>
+</header>
+
+<div class="h-full bg-gray-400 dark:bg-gray-900">
+  <!-- Container -->
+  <div class="mx-auto">
+    <div class="flex justify-center px-6 py-12">
+      <!-- Row -->
+      <div class="w-full xl:w-3/4 lg:w-11/12 flex">
+        <!-- Col for image -->
+        <div class="w-full h-auto dark:bg-gray-800 hidden lg:block lg:w-5/12 bg-cover rounded-l-lg"
+             style="background-image: url('media/avatars/default.jpg')">
+        </div>
+        
+        <!-- Col for form -->
+        <div class="w-full lg:w-7/12 bg-white dark:bg-gray-700 p-5 rounded-lg lg:rounded-l-none">
+          <h3 class="py-4 text-2xl text-center text-gray-800 dark:text-white">ویرایش اطلاعات کاربری</h3>
+          <form method="post" class="space-y-6 bg-white dark:bg-gray-800 rounded">
+            {% csrf_token %}
+            <!-- فیلد نام -->
+            <div class="mb-4 md:flex md:justify-between">
+              <div class="mb-4 md:mr-2 md:mb-0">
+                <label for="{{ form.first_name.id_for_label }}" class="block mb-2 text-sm font-bold text-gray-700 dark:text-white">نام:</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                  <p class="text-red-600 text-sm mt-1">{{ form.first_name.errors.0 }}</p>
+                {% endif %}
+              </div>
+              <div class="md:ml-2">
+                <label for="{{ form.last_name.id_for_label }}" class="block mb-2 text-sm font-bold text-gray-700 dark:text-white">نام خانوادگی:</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                  <p class="text-red-600 text-sm mt-1">{{ form.last_name.errors.0 }}</p>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- فیلد ایمیل -->
+            <div class="mb-4">
+              <label for="{{ form.username.id_for_label }}" class="block mb-2 text-sm font-bold text-gray-700 dark:text-white">نام کاربری:</label>
+              {{ form.username }}
+              {% if form.username.errors %}
+                <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <!-- دکمه ارسال -->
+            <div class="mb-6 text-center">
+              <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-md">
+                ذخیره تغییرات
+              </button>
+            </div>
+
+          </form>
+        </div>
       </div>
-    {% endif %}
-
-    <form method="post" class="space-y-6">
-      {% csrf_token %}
-
-      <!-- فیلد نام -->
-      <div>
-        <label for="{{ form.first_name.id_for_label }}" class="block text-gray-700 font-medium mb-1">نام:</label>
-        {{ form.first_name }}
-        {% if form.first_name.errors %}
-          <p class="text-red-600 text-sm mt-1">{{ form.first_name.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <!-- فیلد نام خانوادگی -->
-      <div>
-        <label for="{{ form.last_name.id_for_label }}" class="block text-gray-700 font-medium mb-1">نام خانوادگی:</label>
-        {{ form.last_name }}
-        {% if form.last_name.errors %}
-          <p class="text-red-600 text-sm mt-1">{{ form.last_name.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <!-- فیلد ایمیل -->
-      <div>
-        <label for="{{ form.username.id_for_label }}" class="block text-gray-700 font-medium mb-1">نام کاربری:</label>
-        {{ form.username }}
-        {% if form.username.errors %}
-          <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <!-- دکمه ارسال -->
-      <button type="submit"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-md">
-        ذخیره تغییرات
-      </button>
-    </form>
+    </div>
   </div>
+</div>
+
 
 </body>
 </html>

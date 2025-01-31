@@ -181,10 +181,15 @@ class edit_profile_form(forms.ModelForm):
 
         }
 
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = profile
-        fields = ['avatar']
-        widgets = {
-            'avatar':forms.FileInput(attrs={'class': 'w-full p-2 border rounded-lg'})
-        }
+# class ProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = profile
+#         fields = ['avatar']
+#         widgets = {
+#             'avatar':forms.FileInput(attrs={'class': 'w-full p-2 border rounded-lg'})
+#         }
+
+class ProfileForm(forms.Form):
+    avatar = forms.ImageField(label="انتخاب تصویر", required=True, widget=forms.ClearableFileInput(attrs={'class':  "block w-72 text-base text-gray-900 border border-gray-400 rounded-lg cursor-pointer bg-gray-100 \
+                      dark:text-gray-300 focus:outline-none dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 \
+                      p-3 shadow-sm"}))

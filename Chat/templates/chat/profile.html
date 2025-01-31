@@ -40,7 +40,30 @@
 <main class="flex items-center justify-center min-h-screen bg-gray-100">
     <div class="bg-white overflow-hidden shadow rounded-lg border w-1/2">
         <div class="flex justify-center pt-6">
-            <img class="rounded-lg w-40 h-40 border-4 border-4 border-double border-blue-800 shadow-md" src="{{ user.profile.avatar.url }}" alt="Extra large avatar">
+                    <div class="flex flex-col items-center space-y-4">
+            <!-- تصویر پروفایل -->
+            <img class="rounded-lg w-40 h-40 border-4 border-double border-blue-800 shadow-md" 
+                 src="{{ user.profile.avatar.url }}" 
+                 alt="Profile Avatar">
+        
+            <!-- فرم آپلود عکس -->
+            <form id="avatarForm" method="post" enctype="multipart/form-data" class="text-center">
+                {% csrf_token %}
+                <label for="file_input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ form.avatar.label_tag }}
+                </label>
+                <input type="file" id="file_input" name="avatar"
+                       class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 
+                              dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+        
+                <button type="submit" 
+                        class="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md 
+                               hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    آپلود تصویر
+                </button>
+            </form>
+        </div>
+
 {#            <img src="{{ user.profile.avatar.url }}" alt="User Avatar" class="w-32 h-32 rounded-full border-4 border-blue-500 shadow-md">#}
         </div>
         <div class="px-4 py-5 sm:px-6 text-center">

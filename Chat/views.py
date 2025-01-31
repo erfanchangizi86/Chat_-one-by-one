@@ -2,12 +2,12 @@ from django.contrib.auth import logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import FormView, ListView,UpdateView
 
-from Chat.forms import RegisterForm, Test_form,edit_profile_form
+from Chat.forms import RegisterForm, Test_form, edit_profile_form, ProfileForm
 from Chat.models import PrivetChat, Message, profile
 
 User = get_user_model()
@@ -66,6 +66,26 @@ class profileListView(ListView):
         query =  super().get_queryset()
         query = query.get(id=self.request.user.id)
         return query
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ProfileForm()  # ارسال فرم به قالب
+        return context
+    def post(self, request, *args, **kwargs):
+        form = ProfileForm(request.POST,request.FILES)
+        if  form.is_valid():
+            pro= profile.objects.get(user=request.user)
+            if pro is not None:
+                pro.avatar =  form.cleaned_data['avatar']
+                pro.save()
+                return redirect(reverse('user'))
+                # return JsonResponse(
+                #     {'message': 'تصویر با موفقیت به‌روزرسانی شد!', })
+        return JsonResponse({'error': 'فرمت فایل نامعتبر است!'}, status=400)
+
+
+
+
 
 
 class profileEdit(LoginRequiredMixin,UpdateView):
