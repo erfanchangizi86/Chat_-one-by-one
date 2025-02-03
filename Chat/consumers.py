@@ -4,6 +4,8 @@ import os
 import django
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from redis.cluster import command
+
 from Chat.models import PrivetChat, Message,profile
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -23,6 +25,9 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         self.accept()
+        command = {
+            ''
+        }
 
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
@@ -32,7 +37,9 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         data = json.loads(text_data)
-        message_content = data['message']
+        message_content = 'None'
+        if data.get('message', None):
+            message_content = data['message']
 
         message = Message.objects.create(
             chat=self.chat,
@@ -45,6 +52,18 @@ class ChatConsumer(WebsocketConsumer):
         if pro and pro.avatar:
             avatar_url = pro.avatar.url  # دسترسی به URL تصویر
         print(avatar_url)
+        if data['type'] == 'img':
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'send_img',
+                    'message': data['image'],
+                    "sender": data['sender'],
+                    'profile': avatar_url,
+                }
+            )
+
+
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
@@ -81,3 +100,6 @@ class ChatConsumer(WebsocketConsumer):
             'profile': event["profile"],
             'chat_id':self.chat_id
         }))
+    def send_img(self,event):
+        print(event)
+        self.send(text_data=json.dumps({}))
