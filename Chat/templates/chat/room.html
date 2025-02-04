@@ -175,7 +175,7 @@
                 FA.addEventListener('load',function (e){
                     chatSocket.send(JSON.stringify({
                         'type':'img',
-                        'image': e.target.result,
+                        'message': e.target.result,
                         'sender': "{{ request.user.username }}"
                 }));
                 });

@@ -8,6 +8,9 @@ from redis.cluster import command
 
 from Chat.models import PrivetChat, Message,profile
 class ChatConsumer(WebsocketConsumer):
+    def new_message(self, data):
+        pass
+
     def connect(self):
         self.chat_id = self.scope['url_route']['kwargs']['chat_id']
         self.user = self.scope['user']
@@ -25,8 +28,8 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         self.accept()
-        command = {
-            ''
+    commands = {
+            'new_message': new_message,
         }
 
     def disconnect(self, close_code):
@@ -37,31 +40,31 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         data = json.loads(text_data)
-        message_content = 'None'
-        if data.get('message', None):
+        try:
+        # self.commands['new_message'](self,data)
             message_content = data['message']
-
-        message = Message.objects.create(
+            message = Message.objects.create(
             chat=self.chat,
             sender=self.user,
             content=message_content
-        )
+            )
+        except :
+            pass
         pro = profile.objects.filter(user=self.user).first()
         avatar_url = "/media/avatars/default.jpg"  # مقدار پیش‌فرض
 
         if pro and pro.avatar:
             avatar_url = pro.avatar.url  # دسترسی به URL تصویر
-        print(avatar_url)
-        if data['type'] == 'img':
-            async_to_sync(self.channel_layer.group_send)(
-                self.room_group_name,
-                {
-                    'type': 'send_img',
-                    'message': data['image'],
-                    "sender": data['sender'],
-                    'profile': avatar_url,
-                }
-            )
+        # if data['type'] == 'img':
+        #     async_to_sync(self.channel_layer.group_send)(
+        #         self.room_group_name,
+        #         {
+        #             'type': 'send_img',
+        #             'message': data['image'],
+        #             "sender": data['sender'],
+        #             'profile': avatar_url,
+        #         }
+        #     )
 
 
         async_to_sync(self.channel_layer.group_send)(
@@ -83,6 +86,7 @@ class ChatConsumer(WebsocketConsumer):
                     'profile': avatar_url,
                 }
             )
+
 
     def chat_message(self, event):
         self.send(text_data=json.dumps({
