@@ -72,6 +72,7 @@ class profileListView(ListView):
         context['form'] = ProfileForm()  # ارسال فرم به قالب
         return context
     def post(self, request, *args, **kwargs):
+
         form = ProfileForm(request.POST,request.FILES)
         if  form.is_valid():
             pro= profile.objects.get(user=request.user)
